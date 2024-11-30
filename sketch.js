@@ -19,14 +19,23 @@ function setup() {
         let row = historicMarkerTable.getRow(i);
         let latitude = parseFloat(row.get("Latitude"));
         let longitude = parseFloat(row.get("Longitude"));
+
+        // Log if parsing fails (latitude or longitude is NaN)
+        if (isNaN(latitude) || isNaN(longitude)) {
+            console.error(`Invalid data at row ${i}: Latitude = ${latitude}, Longitude = ${longitude}`);
+        }
+
         let marker = {
             name: row.get("Name"),
             latitude: latitude,
             longitude: longitude,
             description: row.get("Description"),
         };
+
         markers.push(marker);
         console.log(`Marker: ${marker.name}, Latitude: ${latitude}, Longitude: ${longitude}`);
+
+        // Check if the marker is within bounds
         if (
             latitude < cityBounds.minLat || 
             latitude > cityBounds.maxLat || 
