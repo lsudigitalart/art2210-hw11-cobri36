@@ -1,30 +1,27 @@
-let markerTable;
+let historicMarkerTable;
 let markers = [];
 const cityBounds = { minLat: 30.3290, maxLat: 30.5838, minLon: -91.2805, maxLon: -91.0025 };
 const aspectRatio = (cityBounds.maxLon - cityBounds.minLon) / (cityBounds.maxLat - cityBounds.minLat);
 
 function preload() {
-    // Load the Historic Marker dataset
     historicmarkerTable = loadTable("Historic_Marker.csv", "header");
   }
 
-function setup() 
-    {
+  function setup() {
     createCanvas(800, 800 / aspectRatio);
-    for (let i = 0; i < historicMarkerTable.getRowCount(); i++)
-    {
-        let row = historicMarkerTable.getRow(i);
-        let marker = 
-        {
-            name: row.get("Name"),
-            latitude: parseFloat(row.get("Latitude")),
-            longitude:parseFloat(row.get("Longitude")),
-            description: row.get("Description"),
-        };
-        markers.push(marker);
+  
+    for (let i = 0; i < historicMarkerTable.getRowCount(); i++) {
+      let row = historicMarkerTable.getRow(i);
+      let marker = {
+        name: row.get("Name"),
+        latitude: parseFloat(row.get("Latitude")),
+        longitude: parseFloat(row.get("Longitude")),
+        description: row.get("Description"),
+      };
+      markers.push(marker);
     }
     console.log("Markers loaded: ", markers);
-    }
+  }  
 
 function draw() 
     {
