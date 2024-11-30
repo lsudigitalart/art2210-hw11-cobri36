@@ -19,23 +19,14 @@ function setup() {
         let row = historicMarkerTable.getRow(i);
         let latitude = parseFloat(row.get("Latitude"));
         let longitude = parseFloat(row.get("Longitude"));
-
-        // Log if parsing fails (latitude or longitude is NaN)
-        if (isNaN(latitude) || isNaN(longitude)) {
-            console.error(`Invalid data at row ${i}: Latitude = ${latitude}, Longitude = ${longitude}`);
-        }
-
         let marker = {
             name: row.get("Name"),
             latitude: latitude,
             longitude: longitude,
             description: row.get("Description"),
         };
-
         markers.push(marker);
         console.log(`Marker: ${marker.name}, Latitude: ${latitude}, Longitude: ${longitude}`);
-
-        // Check if the marker is within bounds
         if (
             latitude < cityBounds.minLat || 
             latitude > cityBounds.maxLat || 
@@ -50,19 +41,26 @@ function setup() {
 }
 
 function draw() {
-  background(20, 20, 40);
-  noStroke();
-  for (let marker of markers) {
-    let x = map(marker.longitude, cityBounds.minLon, cityBounds.maxLon, 0, width);
-    let y = map(marker.latitude, cityBounds.minLat, cityBounds.maxLat, height, 0);
-    console.log("Drawing marker:", marker.name, "at", x, y);
-    fill(100, 100, 255);
-    ellipse(x || 0, y || 0, 10, 10);
-    textSize(10);
-    textAlign(CENTER, CENTER);
-    text(marker.name, x, y - 15);
-  }
-}
+    background(20, 20, 40);
+    noStroke();
+    
+    for (let marker of markers) {
+      let x = map(marker.longitude, cityBounds.minLon, cityBounds.maxLon, 0, width);
+      let y = map(marker.latitude, cityBounds.minLat, cityBounds.maxLat, height, 0);
+      if (isNaN(x) || isNaN(y)) {
+        console.error(`Invalid coordinates for marker: ${marker.name} (Latitude: ${marker.latitude}, Longitude: ${marker.longitude})`);
+        continue;
+      }
+  
+      console.log("Drawing marker:", marker.name, "at", x, y);
+      
+      fill(100, 100, 255);
+      ellipse(x, y, 10, 10);
+      textSize(10);
+      textAlign(CENTER, CENTER);
+      text(marker.name, x, y - 15);
+    }
+  }  
 
 function mousePressed() {
   for (let marker of markers) {
