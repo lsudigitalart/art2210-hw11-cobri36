@@ -1,6 +1,11 @@
 let historicMarkerTable;
 let markers = [];
-const cityBounds = { minLat: 30.3290, maxLat: 30.5838, minLon: -91.2805, maxLon: -91.0025 };
+const cityBounds = { 
+    minLat: 30.3290, 
+    maxLat: 30.5838, 
+    minLon: -91.2805, 
+    maxLon: -91.0025 
+  };
 const aspectRatio = (cityBounds.maxLon - cityBounds.minLon) / (cityBounds.maxLat - cityBounds.minLat);
 
 function preload() {
@@ -9,20 +14,30 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 800 / aspectRatio);
-  console.log("Canvas created with width:", width, "height:", height);
-
-  for (let i = 0; i < historicMarkerTable.getRowCount(); i++) {
-    let row = historicMarkerTable.getRow(i);
-    let marker = {
-      name: row.get("Name"),
-      latitude: parseFloat(row.get("Latitude")),
-      longitude: parseFloat(row.get("Longitude")),
-      description: row.get("Description"),
-    };
-    markers.push(marker);
-  }
-  console.log("Markers loaded: ", markers);
+    createCanvas(800, 800 / aspectRatio);
+    for (let i = 0; i < historicMarkerTable.getRowCount(); i++) {
+        let row = historicMarkerTable.getRow(i);
+        let latitude = parseFloat(row.get("Latitude"));
+        let longitude = parseFloat(row.get("Longitude"));
+        let marker = {
+            name: row.get("Name"),
+            latitude: latitude,
+            longitude: longitude,
+            description: row.get("Description"),
+        };
+        markers.push(marker);
+        console.log(`Marker: ${marker.name}, Latitude: ${latitude}, Longitude: ${longitude}`);
+        if (
+            latitude < cityBounds.minLat || 
+            latitude > cityBounds.maxLat || 
+            longitude < cityBounds.minLon || 
+            longitude > cityBounds.maxLon
+        ) {
+            console.warn(`Marker ${marker.name} is out of cityBounds!`);
+        }
+    }
+    console.log("Markers loaded: ", markers);
+    console.log("City Bounds: ", cityBounds);
 }
 
 function draw() {
