@@ -5,22 +5,25 @@ const aspectRatio = (cityBounds.maxLon - cityBounds.minLon) / (cityBounds.maxLat
 
 function preload() {
     // Load the Historic Marker dataset
-    markerTable = loadTable("https://data.brla.gov/resource/jpvf-a4mn.csv", "header");
+    historicmarkerTable = loadTable("Historic_Marker.csv", "header");
   }
 
 function setup() 
     {
     createCanvas(800, 800 / aspectRatio);
-    for (let i = 0; i < markerTable.getRowCount(); i++) {
-        let row = markerTable.getRow(i);
-        let name = row.getString("marker_name");
-        let latitude = row.getNum("latitude");
-        let longitude = row.getNum("longitude");
-        let description = row.getString("marker_text");
-        if (latitude && longitude) {
-            markers.push({ name, latitude, longitude, description });
-          }
-        }
+    for (let i = 0; i < historicMarkerTable.getRowCount(); i++)
+    {
+        let row = historicMarkerTable.getRow(i);
+        let marker = 
+        {
+            name: row.get("Name"),
+            latitude: parseFloat(row.get("Latitude")),
+            longitude:parseFloat(row.get("Longitude")),
+            description: row.get("Description"),
+        };
+        markers.push(marker);
+    }
+    console.log("Markers loaded: ", markers);
     }
 
 function draw() 
